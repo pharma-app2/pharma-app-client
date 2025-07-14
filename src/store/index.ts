@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './slices/auth/authSlice';
+import registerReducer from './slices/auth/registerPatientSlice';
+import signInPatientReducer from './slices/auth/signInPatientSlice';
 
 export const store = configureStore({
   reducer: {
-    // A chave 'auth' aqui define como o estado será chamado no seletor global
-    // Ex: useSelector((state) => state.auth.loading)
-    auth: authReducer,
+    // A chave 'register' aqui define como o estado será chamado no seletor global
+    // Ex: useSelector((state) => state.register.loading)
+    register: registerReducer,
+    signIn: signInPatientReducer,
   },
 });
 
