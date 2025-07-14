@@ -1,17 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { type AppDispatch, type RootState } from '../store';
-import {
-  clearError,
-  resetRegistrationStatus,
-} from '../store/slices/auth/registerPatientSlice';
-import { type UserSignUpDTO } from '../types/user';
+import { clearError } from '../store/slices/auth/registerPatientSlice';
+import { type UserSignInDTO } from '../types/user';
 import { toast } from 'react-toastify';
-import { registerPatient } from '../store/slices/auth/authThunk';
+import { signInPatient } from '../store/slices/auth/authThunk';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Link as RouterLink } from 'react-router-dom';
 
 import {
   TextField,
@@ -24,11 +21,11 @@ import {
   IconButton,
 } from '@mui/material';
 
-const RegisterPage = () => {
+const SignInPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { loading, error, registrationSuccess } = useSelector(
-    (state: RootState) => state.register,
+  const { loading, error, userInfo, registrationSuccess } = useSelector(
+    (state: RootState) => state.signIn,
   );
   const [showPassword, setShowPassword] = useState(false);
 
@@ -36,11 +33,10 @@ const RegisterPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
-  } = useForm<UserSignUpDTO>();
+  } = useForm<UserSignInDTO>();
 
-  const onSubmitDispatchSlice: SubmitHandler<UserSignUpDTO> = (data) => {
-    dispatch(registerPatient(data));
+  const onSubmitDispatchSlice: SubmitHandler<UserSignInDTO> = (data) => {
+    dispatch(signInPatient(data));
   };
 
   useEffect(() => {
@@ -49,12 +45,12 @@ const RegisterPage = () => {
       dispatch(clearError());
     }
 
+    console.log({ userInfo });
+
     if (registrationSuccess) {
-      toast.success('Cadastro realizado! Por favor, faça seu login.');
-      navigate('/signin/pacientes');
-      dispatch(resetRegistrationStatus());
+      toast.success('Paciente logado com sucesso!');
     }
-  }, [error, registrationSuccess, navigate, dispatch]);
+  }, [error, userInfo, registrationSuccess, navigate, dispatch]);
 
   return (
     <Container maxWidth="xs">
@@ -67,24 +63,13 @@ const RegisterPage = () => {
         }}
       >
         <Typography component="h1" variant="h5">
-          Cadastro
+          Faça seu login
         </Typography>
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmitDispatchSlice)}
           sx={{ mt: 3 }}
         >
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="fullName"
-            label="Nome Completo"
-            autoFocus
-            {...register('fullName', { required: 'O nome é obrigatório' })}
-            error={!!errors.fullName}
-            helperText={errors.fullName?.message}
-          />
           <TextField
             margin="normal"
             required
@@ -135,54 +120,6 @@ const RegisterPage = () => {
               },
             }}
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Confirme a Senha"
-            type={showPassword ? 'text' : 'password'}
-            id="password-confirmation"
-            {...register('passwordConfirmation', {
-              required: 'A senha é obrigatória',
-              validate: (value) =>
-                value === getValues('password') || 'As senhas não correspondem',
-            })}
-            error={!!errors.passwordConfirmation}
-            helperText={errors.passwordConfirmation?.message}
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword((show) => !show)}
-                      onMouseDown={(e) => e.preventDefault()}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="CPF"
-            type="text"
-            id="cpf"
-            {...register('cpf', {
-              required: 'O CPF é obrigatório',
-              pattern: {
-                value: /^\d{11}$/,
-                message: 'CPF deve conter apenas 11 números',
-              },
-            })}
-            error={!!errors.cpf}
-            helperText={errors.cpf?.message}
-          />
 
           <Box
             sx={{
@@ -202,16 +139,16 @@ const RegisterPage = () => {
               {loading ? (
                 <CircularProgress size={24} color="inherit" />
               ) : (
-                'Cadastrar'
+                'Entrar'
               )}
             </Button>
             <Button
               component={RouterLink}
-              to="/signin/pacientes"
+              to="/cadastro/pacientes"
               variant="text"
               size="large"
             >
-              Já possui cadastro? Faça o login!
+              Não possui cadastro? Faça já o seu!
             </Button>
           </Box>
         </Box>
@@ -220,4 +157,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default SignInPage;

@@ -26,7 +26,7 @@ const LandingPage = () => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  return <Navigate to="/register" replace />;
+  return <Navigate to="/cadastro/pacientes" replace />;
 };
 
 export default LandingPage;

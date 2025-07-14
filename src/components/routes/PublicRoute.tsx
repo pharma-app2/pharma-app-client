@@ -8,7 +8,7 @@ type PublicRouteProps = {
 
 // O 'children' será o componente que queremos renderizar (ex: <RegisterPage />)
 const PublicRoute = ({ children }: PublicRouteProps) => {
-  const { userInfo } = useSelector((state: RootState) => state.auth);
+  const { userInfo } = useSelector((state: RootState) => state.signIn);
   const location = useLocation();
 
   if (userInfo) {
