@@ -24,7 +24,7 @@ import {
 const SignInPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { loading, error, userInfo, registrationSuccess } = useSelector(
+  const { loading, error, userInfo, signInSuccess } = useSelector(
     (state: RootState) => state.signIn,
   );
   const [showPassword, setShowPassword] = useState(false);
@@ -45,12 +45,10 @@ const SignInPage = () => {
       dispatch(clearError());
     }
 
-    console.log({ userInfo });
-
-    if (registrationSuccess) {
+    if (signInSuccess) {
       toast.success('Paciente logado com sucesso!');
     }
-  }, [error, userInfo, registrationSuccess, navigate, dispatch]);
+  }, [error, userInfo, signInSuccess, navigate, dispatch]);
 
   return (
     <Container maxWidth="xs">

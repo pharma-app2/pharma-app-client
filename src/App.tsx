@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import PublicRoute from './components/routes/PublicRoute';
 import PrivateRoute from './components/routes/PrivateRoute';
 
-import { AuthStatus } from './store/slices/auth/AuthStatus';
+import { AuthStatus } from './store/slices/auth/authStatus';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { checkAuthStatus } from './store/slices/auth/authThunk';
@@ -19,7 +19,7 @@ import MainLayout from './components/layout/MainLayout';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
-  const authStatus = useSelector((state: RootState) => state.signIn.authStatus);
+  const { authStatus } = useSelector((state: RootState) => state.signIn);
 
   useEffect(() => {
     if (authStatus === AuthStatus.IDLE) {

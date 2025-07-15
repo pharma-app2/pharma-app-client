@@ -9,6 +9,7 @@ import {
   checkAuthApi,
   registerApi,
   signInApi,
+  signOutApi,
 } from '../../../services/authService';
 import axios from 'axios';
 
@@ -68,6 +69,25 @@ export const signInPatient = createAsyncThunk<
     return thunkAPI.rejectWithValue('Erro ao autenticar usuário');
   }
 });
+
+export const signOutUser = createAsyncThunk(
+  'auth/signout/user',
+  async (_, thunkAPI) => {
+    try {
+      await signOutApi();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const serverError = error.response?.data as BackendError;
+
+        if (serverError && serverError.message) {
+          return thunkAPI.rejectWithValue(serverError.message);
+        }
+      }
+
+      return thunkAPI.rejectWithValue('Erro ao fazer logout');
+    }
+  },
+);
 
 export const checkAuthStatus = createAsyncThunk(
   'auth/checkStatus',

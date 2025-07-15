@@ -4,7 +4,7 @@ import { Box, CircularProgress } from '@mui/material';
 import type { RootState } from '../store';
 
 const LandingPage = () => {
-  const { userInfo, loading } = useSelector((state: RootState) => state.auth);
+  const { userInfo, loading } = useSelector((state: RootState) => state.signIn);
 
   if (loading) {
     return (
