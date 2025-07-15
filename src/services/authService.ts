@@ -16,6 +16,10 @@ export const signInApi = (userData: UserSignInDTO) => {
   return apiClient.post('/auth/signin/patient', userData);
 };
 
+export const signOutApi = () => {
+  return apiClient.post('/signout');
+};
+
 export const checkAuthApi = () => {
   return apiClient.get('/me');
 };

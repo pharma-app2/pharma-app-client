@@ -10,6 +10,7 @@ const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const { userInfo } = useSelector((state: RootState) => state.signIn);
   const location = useLocation();
 
+  // E se o usuario tiver um token jwt mas não tiver userInfo?
   if (!userInfo) {
     return (
       <Navigate to="/signin/pacientes" replace state={{ from: location }} />
