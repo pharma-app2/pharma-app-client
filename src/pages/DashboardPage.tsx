@@ -2,11 +2,7 @@ import { Typography, Container } from '@mui/material';
 
 const DashboardPage = () => {
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      sx={{ textAlign: 'center', mt: 8, py: 4 }}
-    >
+    <Container component="main" maxWidth="xs" sx={{}}>
       <Typography
         variant="h1"
         component="h1"
