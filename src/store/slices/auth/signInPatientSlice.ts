@@ -1,22 +1,22 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { checkAuthStatus, signInPatient, signOutUser } from './authThunk';
 import type { AuthenticatedUser } from '../../../types/user';
-import { AuthStatus, type AuthStatusValue } from './authStatus';
+import { StateStatus, type StateStatusValue } from '../statusEnum';
 
-interface AuthState {
+interface State {
   userInfo: AuthenticatedUser | null;
   loading: boolean;
   error: string | null;
   signInSuccess: boolean;
-  authStatus: AuthStatusValue;
+  authStatus: StateStatusValue;
 }
 
-const initialState: AuthState = {
+const initialState: State = {
   userInfo: null,
   loading: false,
   error: null,
   signInSuccess: false,
-  authStatus: AuthStatus.IDLE,
+  authStatus: StateStatus.IDLE,
 };
 
 const signInPatientSlice = createSlice({
@@ -57,33 +57,33 @@ const signInPatientSlice = createSlice({
     // Signout user
     builder
       .addCase(signOutUser.pending, (state) => {
-        state.authStatus = AuthStatus.LOADING;
+        state.authStatus = StateStatus.LOADING;
         state.loading = true;
       })
       .addCase(signOutUser.fulfilled, (state) => {
-        state.authStatus = AuthStatus.IDLE;
+        state.authStatus = StateStatus.IDLE;
         state.userInfo = null; // this is what makes user sign out?
         state.signInSuccess = false;
         state.loading = false;
       })
       .addCase(signOutUser.rejected, (state) => {
-        state.authStatus = AuthStatus.IDLE;
+        state.authStatus = StateStatus.IDLE;
         state.loading = false;
       });
 
     // Check auth status reducers
     builder
       .addCase(checkAuthStatus.pending, (state) => {
-        state.authStatus = AuthStatus.LOADING;
+        state.authStatus = StateStatus.LOADING;
         state.loading = true;
       })
       .addCase(checkAuthStatus.fulfilled, (state, action) => {
-        state.authStatus = AuthStatus.SUCCEEDED;
+        state.authStatus = StateStatus.SUCCEEDED;
         state.userInfo = action.payload; // Restaura a sessão do usuário
         state.loading = false;
       })
       .addCase(checkAuthStatus.rejected, (state) => {
-        state.authStatus = AuthStatus.FAILED;
+        state.authStatus = StateStatus.FAILED;
         state.userInfo = null;
         state.loading = false;
       });

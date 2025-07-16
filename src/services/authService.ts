@@ -1,12 +1,5 @@
-import axios from 'axios';
 import { type UserSignInDTO, type UserSignUpDTO } from '../types/user';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true,
-});
+import { apiClient } from './config/axiosConfig';
 
 export const registerApi = (userData: UserSignUpDTO) => {
   return apiClient.post('/auth/signup/patient', userData);
