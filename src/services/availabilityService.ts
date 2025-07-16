@@ -3,7 +3,7 @@ import { apiClient } from './config/axiosConfig';
 
 // Define os parâmetros de busca que podem ser enviados
 export interface SearchParams {
-  name?: string;
+  pharmacistName?: string;
   city?: string;
   state?: string;
   remote?: boolean;
@@ -12,8 +12,8 @@ export interface SearchParams {
 export const searchAvailabilitiesApi = (params: SearchParams) => {
   const queryParams = new URLSearchParams();
 
-  if (params.name) {
-    queryParams.append('name', params.name);
+  if (params.pharmacistName) {
+    queryParams.append('pharmacistName', params.pharmacistName);
   }
   if (params.city) {
     queryParams.append('city', params.city);
