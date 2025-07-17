@@ -1,32 +1,42 @@
-import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
-import { Box, CircularProgress } from '@mui/material';
-import type { RootState } from '../store';
+import { Box, Typography, Button } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 const LandingPage = () => {
-  const { userInfo, loading } = useSelector((state: RootState) => state.signIn);
-
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <CircularProgress />
+  return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      height="calc(100vh - 64px)"
+    >
+      <Typography variant="h2" component="h1" gutterBottom>
+        Bem-vindo ao PharmaApp
+      </Typography>
+      <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
+        Sua plataforma de conexão com farmacêuticos.
+      </Typography>
+      <Box>
+        <Button
+          variant="contained"
+          size="large"
+          component={RouterLink}
+          to="/signin"
+          sx={{ mr: 2 }}
+        >
+          Fazer Login
+        </Button>
+        <Button
+          variant="outlined"
+          size="large"
+          component={RouterLink}
+          to="/cadastro/pacientes"
+        >
+          Criar Conta
+        </Button>
       </Box>
-    );
-  }
-
-  if (userInfo) {
-    // A propriedade 'replace' substitui a entrada '/' no histórico
-    // do navegador por '/dashboard', impedindo que o usuário fique preso
-    // em um loop ao clicar no botão "voltar".
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  return <Navigate to="/cadastro/pacientes" replace />;
+    </Box>
+  );
 };
 
 export default LandingPage;

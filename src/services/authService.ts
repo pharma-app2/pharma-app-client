@@ -1,4 +1,8 @@
-import { type UserSignInDTO, type UserSignUpDTO } from '../types/user';
+import {
+  UserRole,
+  type UserSignInDTO,
+  type UserSignUpDTO,
+} from '../types/user';
 import { apiClient } from './config/axiosConfig';
 
 export const registerApi = (userData: UserSignUpDTO) => {
@@ -6,7 +10,11 @@ export const registerApi = (userData: UserSignUpDTO) => {
 };
 
 export const signInApi = (userData: UserSignInDTO) => {
-  return apiClient.post('/auth/signin/patient', userData);
+  const { role } = userData;
+  const userType = role === UserRole.ROLE_PHARMACIST ? 'pharmacist' : 'patient';
+  const endpoint = `/auth/signin/${userType}`;
+
+  return apiClient.post(endpoint, userData);
 };
 
 export const signOutApi = () => {

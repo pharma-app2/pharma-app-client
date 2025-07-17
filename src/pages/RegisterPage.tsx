@@ -51,7 +51,7 @@ const RegisterPage = () => {
 
     if (registrationSuccess) {
       toast.success('Cadastro realizado! Por favor, faça seu login.');
-      navigate('/signin/pacientes');
+      navigate('/signin');
       dispatch(resetRegistrationStatus());
     }
   }, [error, registrationSuccess, navigate, dispatch]);
@@ -112,8 +112,8 @@ const RegisterPage = () => {
             {...register('password', {
               required: 'A senha é obrigatória',
               minLength: {
-                value: 6,
-                message: 'A senha deve ter no mínimo 6 caracteres',
+                value: 3,
+                message: 'A senha deve ter no mínimo 3 caracteres',
               },
             })}
             error={!!errors.password}
@@ -207,7 +207,7 @@ const RegisterPage = () => {
             </Button>
             <Button
               component={RouterLink}
-              to="/signin/pacientes"
+              to="/signin"
               variant="text"
               size="large"
             >
