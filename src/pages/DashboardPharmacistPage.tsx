@@ -5,6 +5,7 @@ import DashboardCard from '../components/DashboardCard';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import type { RootState } from '../store';
+import EventNoteIcon from '@mui/icons-material/EventNote';
 
 const dashboardItems = [
   {
@@ -13,6 +14,12 @@ const dashboardItems = [
     description:
       'Visualize e gerencie suas receitas médicas ativas e passadas.',
     path: '/receitas',
+  },
+  {
+    icon: <EventNoteIcon />,
+    title: 'Mina Agenda',
+    description: 'Veja seus próximos agendamentos.',
+    path: '/agendamentos/farmaceutico',
   },
 ];
 

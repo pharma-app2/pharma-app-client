@@ -15,7 +15,7 @@ import LandingPage from './pages/LandingPage';
 import DashboardPatientPage from './pages/DashboardPatientPage';
 import NotFoundPage from './pages/NotFoundPage';
 import MainLayout from './components/layout/MainLayout';
-import AppointmentPage from './pages/AppointmentPage';
+import AppointmentPatientPage from './pages/AppointmentPatientPage';
 import { StateStatus } from './store/slices/statusEnum';
 import AppointmentCreatePage from './pages/AppointmentCreatePage';
 import { UserRole } from './types/user';
@@ -103,10 +103,10 @@ function App() {
             }
           />
           <Route
-            path="/agendamentos"
+            path="/agendamentos/paciente"
             element={
               <PrivateRoute allowedRoles={[UserRole.ROLE_PATIENT]}>
-                <AppointmentPage />
+                <AppointmentPatientPage />
               </PrivateRoute>
             }
           />
