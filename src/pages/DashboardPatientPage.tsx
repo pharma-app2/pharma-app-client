@@ -28,7 +28,7 @@ const dashboardItems = [
     icon: <EventNoteIcon />,
     title: 'Agendamentos',
     description: 'Veja seus próximos agendamentos e marque novas consultas.',
-    path: '/agendamentos',
+    path: '/agendamentos/paciente',
   },
   {
     icon: <ChatIcon />,
