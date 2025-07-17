@@ -4,9 +4,9 @@ import { apiClient } from './config/axiosConfig';
 // Define os parâmetros de busca que podem ser enviados
 export interface SearchParams {
   pharmacistName?: string;
-  city?: string;
-  state?: string;
-  remote?: boolean;
+  ibgeApiCity?: string;
+  ibgeApiState?: string;
+  acceptsRemote?: boolean;
 }
 
 export const searchAvailabilitiesApi = (params: SearchParams) => {
@@ -15,19 +15,19 @@ export const searchAvailabilitiesApi = (params: SearchParams) => {
   if (params.pharmacistName) {
     queryParams.append('pharmacistName', params.pharmacistName);
   }
-  if (params.city) {
-    queryParams.append('city', params.city);
+  if (params.ibgeApiCity) {
+    queryParams.append('ibgeApiCity', params.ibgeApiCity);
   }
 
-  if (params.state) {
-    queryParams.append('state', params.state);
+  if (params.ibgeApiState) {
+    queryParams.append('ibgeApiState', params.ibgeApiState);
   }
 
-  if (params.remote) {
-    queryParams.append('remote', 'true');
+  if (params.acceptsRemote) {
+    queryParams.append('acceptsRemote', 'true');
   }
 
   return apiClient.get<Availability[]>(
-    `/availabilities/search?${queryParams.toString()}`,
+    `/profiles/search?${queryParams.toString()}`,
   );
 };

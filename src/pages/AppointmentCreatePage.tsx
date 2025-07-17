@@ -30,10 +30,10 @@ import {
 import AvailabilityResultCard from '../components/AvailabilityResultCard';
 
 interface SearchFormInputs {
-  name: string;
-  state: string;
-  city: string;
-  remote: boolean;
+  pharmacistName: string;
+  ibgeApiState: string;
+  ibgeApiCity: string;
+  acceptsRemote: boolean;
 }
 
 const AppointmentCreatePage = () => {
@@ -50,21 +50,21 @@ const AppointmentCreatePage = () => {
   const { register, handleSubmit, watch, setValue } = useForm<SearchFormInputs>(
     {
       defaultValues: {
-        name: '',
-        state: '',
-        city: '',
-        remote: false,
+        pharmacistName: '',
+        ibgeApiState: '',
+        ibgeApiCity: '',
+        acceptsRemote: false,
       },
     },
   );
 
-  const selectedState = watch('state');
-  const isRemote = watch('remote');
+  const selectedState = watch('ibgeApiState');
+  const isRemote = watch('acceptsRemote');
 
   useEffect(() => {
     if (isRemote) {
-      setValue('state', '');
-      setValue('city', '');
+      setValue('ibgeApiState', '');
+      setValue('ibgeApiCity', '');
     }
   }, [isRemote, setValue]);
 
@@ -116,7 +116,7 @@ const AppointmentCreatePage = () => {
 
     fetchCities();
     // Reseta o valor do campo de município sempre que o estado mudar
-    setValue('city', '');
+    setValue('ibgeApiCity', '');
   }, [selectedState, states, setValue]); // <-- Roda este efeito quando 'selectedState' mudar
 
   useEffect(() => {
@@ -190,11 +190,11 @@ const AppointmentCreatePage = () => {
           <TextField
             fullWidth
             label="Nome do Profissional"
-            {...register('name')}
+            {...register('pharmacistName')}
           />
 
           <FormControlLabel
-            control={<Checkbox {...register('remote')} />}
+            control={<Checkbox {...register('acceptsRemote')} />}
             label="Apenas Teleconsulta"
             sx={{ mb: 2 }}
           />
@@ -205,7 +205,7 @@ const AppointmentCreatePage = () => {
               labelId="state-select-label"
               label="Estado"
               defaultValue=""
-              {...register('state')}
+              {...register('ibgeApiState')}
             >
               <MenuItem value="">
                 <em>Todos</em>
@@ -227,7 +227,7 @@ const AppointmentCreatePage = () => {
               labelId="city-select-label"
               label="Município"
               defaultValue=""
-              {...register('city')}
+              {...register('ibgeApiCity')}
             >
               <MenuItem value="">
                 <em>Todos</em>
