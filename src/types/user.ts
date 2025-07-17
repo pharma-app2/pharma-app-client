@@ -13,9 +13,18 @@ export type UserSignUpDTO = {
   cpf?: string;
 };
 
+export const UserRole = {
+  ROLE_PATIENT: 'ROLE_PATIENT',
+  ROLE_PHARMACIST: 'ROLE_PHARMACIST',
+} as const;
+
+export type UserRoleEnum = keyof typeof UserRole;
+export type UserRoleValue = (typeof UserRole)[keyof typeof UserRole];
+
 export type UserSignInDTO = {
   email: string;
   password?: string;
+  role: UserRoleEnum;
 };
 
 export type AuthenticatedUser = {
@@ -23,17 +32,6 @@ export type AuthenticatedUser = {
   email: string;
   role: string;
   fullName: string;
-  jwtCookie?: {
-    name: string;
-    value: string;
-    maxAge: string;
-    domain?: string;
-    path: string;
-    secure: boolean;
-    httpOnly: boolean;
-    partitioned: boolean;
-    sameSite?: string;
-  };
 };
 
 export type UserWithoutId = Omit<User, 'id'>;

@@ -12,12 +12,15 @@ import type { AppDispatch, RootState } from './store';
 import SignInPage from './pages/SignInPage';
 import RegisterPage from './pages/RegisterPage';
 import LandingPage from './pages/LandingPage';
-import DashboardPage from './pages/DashboardPage';
+import DashboardPatientPage from './pages/DashboardPatientPage';
 import NotFoundPage from './pages/NotFoundPage';
 import MainLayout from './components/layout/MainLayout';
 import AppointmentPage from './pages/AppointmentPage';
 import { StateStatus } from './store/slices/statusEnum';
 import AppointmentCreatePage from './pages/AppointmentCreatePage';
+import { UserRole } from './types/user';
+import DashboardPharmacistPage from './pages/DashboardPharmacistPage';
+import PharmacistProfilePage from './pages/PharmacistProfilePage';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -47,10 +50,9 @@ function App() {
         pauseOnHover
         theme="colored"
       />
-
       <Routes>
         <Route
-          path="/signin/pacientes"
+          path="/signin"
           element={
             <PublicRoute>
               <SignInPage />
@@ -65,20 +67,56 @@ function App() {
             </PublicRoute>
           }
         />
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <LandingPage />
+            </PublicRoute>
+          }
+        />
 
         <Route element={<MainLayout />}>
-          <Route path="/" element={<LandingPage />} />
+          {/* Todas as rotas aqui dentro serão renderizadas dentro do <Outlet /> do MainLayout */}
           <Route
-            path="/dashboard"
-            element={<PrivateRoute>{<DashboardPage />}</PrivateRoute>}
+            path="/dashboard/paciente"
+            element={
+              <PrivateRoute allowedRoles={[UserRole.ROLE_PATIENT]}>
+                <DashboardPatientPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/dashboard/farmaceutico"
+            element={
+              <PrivateRoute allowedRoles={[UserRole.ROLE_PHARMACIST]}>
+                <DashboardPharmacistPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/perfil/farmaceutico"
+            element={
+              <PrivateRoute allowedRoles={[UserRole.ROLE_PHARMACIST]}>
+                <PharmacistProfilePage />
+              </PrivateRoute>
+            }
           />
           <Route
             path="/agendamentos"
-            element={<PrivateRoute>{<AppointmentPage />}</PrivateRoute>}
+            element={
+              <PrivateRoute allowedRoles={[UserRole.ROLE_PATIENT]}>
+                <AppointmentPage />
+              </PrivateRoute>
+            }
           />
           <Route
             path="/agendamentos/novo"
-            element={<PrivateRoute>{<AppointmentCreatePage />}</PrivateRoute>}
+            element={
+              <PrivateRoute allowedRoles={[UserRole.ROLE_PATIENT]}>
+                <AppointmentCreatePage />
+              </PrivateRoute>
+            }
           />
         </Route>
 

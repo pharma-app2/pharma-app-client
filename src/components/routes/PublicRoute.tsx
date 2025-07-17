@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 import type { RootState } from '../../store';
+import { UserRole } from '../../types/user';
 
 type PublicRouteProps = {
   children: React.ReactNode;
@@ -14,10 +15,16 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
   if (userInfo) {
     // A propriedade 'replace' substitui a entrada atual no histórico
     // em vez de adicionar uma nova, evitando o loop do botão "voltar".
-    return <Navigate to="/dashboard" replace state={{ from: location }} />;
+
+    console.log({ userInfo });
+
+    const redirectTo =
+      userInfo.role === UserRole.ROLE_PHARMACIST
+        ? '/dashboard/farmaceutico'
+        : '/dashboard/paciente';
+    return <Navigate to={redirectTo} replace state={{ from: location }} />;
   }
 
-  // Se não estiver logado, renderize o componente filho
   return children;
 };
 

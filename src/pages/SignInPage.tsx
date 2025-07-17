@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { type AppDispatch, type RootState } from '../store';
 import { clearError } from '../store/slices/auth/registerPatientSlice';
-import { type UserSignInDTO } from '../types/user';
+import { UserRole, type UserSignInDTO } from '../types/user';
 import { toast } from 'react-toastify';
 import { signInPatient } from '../store/slices/auth/authThunk';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -19,6 +19,10 @@ import {
   CircularProgress,
   InputAdornment,
   IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 
 const SignInPage = () => {
@@ -33,7 +37,11 @@ const SignInPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<UserSignInDTO>();
+  } = useForm<UserSignInDTO>({
+    defaultValues: {
+      role: UserRole.ROLE_PATIENT,
+    },
+  });
 
   const onSubmitDispatchSlice: SubmitHandler<UserSignInDTO> = (data) => {
     dispatch(signInPatient(data));
@@ -95,8 +103,8 @@ const SignInPage = () => {
             {...register('password', {
               required: 'A senha é obrigatória',
               minLength: {
-                value: 6,
-                message: 'A senha deve ter no mínimo 6 caracteres',
+                value: 3,
+                message: 'A senha deve ter no mínimo 3 caracteres',
               },
             })}
             error={!!errors.password}
@@ -118,6 +126,20 @@ const SignInPage = () => {
               },
             }}
           />
+
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="role-select-label">Eu sou</InputLabel>
+            <Select
+              labelId="role-select-label"
+              id="role-select"
+              label="Eu sou"
+              {...register('role', { required: 'Selecione um perfil' })}
+              defaultValue={UserRole.ROLE_PATIENT}
+            >
+              <MenuItem value={UserRole.ROLE_PATIENT}>Paciente</MenuItem>
+              <MenuItem value={UserRole.ROLE_PHARMACIST}>Farmacêutico</MenuItem>
+            </Select>
+          </FormControl>
 
           <Box
             sx={{

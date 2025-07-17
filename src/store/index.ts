@@ -3,6 +3,7 @@ import registerReducer from './slices/auth/registerPatientSlice';
 import signInPatientReducer from './slices/auth/signInPatientSlice';
 import appointmentReducer from './slices/appointments/appointmentSlice';
 import availabilitySearchReducer from './slices/availabilities/availabilitySearchSlice';
+import pharmacistProfileReducer from './slices/pharmacistProfiles/pharmacistProfileSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     signIn: signInPatientReducer,
     appointments: appointmentReducer,
     availabilitySearch: availabilitySearchReducer,
+    pharmacistProfile: pharmacistProfileReducer,
   },
 });
 
