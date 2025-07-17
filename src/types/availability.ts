@@ -1,9 +1,9 @@
 export interface Availability {
   id: string;
   pharmacistName: string;
-  city: string;
-  neighborhood: string;
-  nextAvailableSlot: string;
+  ibgeApiCity: string;
+  ibgeApiState: string;
+  acceptsRemote: string;
 }
 
 export interface AvailabilitySearchState {

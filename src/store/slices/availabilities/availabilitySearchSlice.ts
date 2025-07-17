@@ -14,7 +14,7 @@ export const searchAvailabilities = createAsyncThunk<
   Availability[],
   SearchParams,
   { rejectValue: string }
->('availabilities/search', async (params, { rejectWithValue }) => {
+>('profiles/search', async (params, { rejectWithValue }) => {
   try {
     const response = await searchAvailabilitiesApi(params);
     // O backend já deve retornar a lista ordenada
