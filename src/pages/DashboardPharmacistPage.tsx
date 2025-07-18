@@ -18,7 +18,8 @@ const dashboardItems = [
   {
     icon: <EventNoteIcon />,
     title: 'Mina Agenda',
-    description: 'Veja seus próximos agendamentos.',
+    description:
+      'Veja seus próximos agendamentos, agende novas consultas e abra novos horários',
     path: '/agendamentos/farmaceutico',
   },
 ];

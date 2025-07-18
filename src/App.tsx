@@ -15,12 +15,14 @@ import LandingPage from './pages/LandingPage';
 import DashboardPatientPage from './pages/DashboardPatientPage';
 import NotFoundPage from './pages/NotFoundPage';
 import MainLayout from './components/layout/MainLayout';
-import AppointmentPatientPage from './pages/AppointmentPatientPage';
+import AppointmentsPatientPage from './pages/AppointmentsPatientPage';
 import { StateStatus } from './store/slices/statusEnum';
-import AppointmentCreatePage from './pages/AppointmentCreatePage';
+import AppointmentSearchByParamsPage from './pages/AppointmentSearchByParamsPage';
 import { UserRole } from './types/user';
 import DashboardPharmacistPage from './pages/DashboardPharmacistPage';
 import PharmacistProfilePage from './pages/PharmacistProfilePage';
+import AppointmentsPharmacistPage from './pages/AppointmentsPharmacistPage';
+import AvailabilityCreatePage from './pages/AvailabilityCreatePage';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -77,7 +79,6 @@ function App() {
         />
 
         <Route element={<MainLayout />}>
-          {/* Todas as rotas aqui dentro serão renderizadas dentro do <Outlet /> do MainLayout */}
           <Route
             path="/dashboard/paciente"
             element={
@@ -106,7 +107,23 @@ function App() {
             path="/agendamentos/paciente"
             element={
               <PrivateRoute allowedRoles={[UserRole.ROLE_PATIENT]}>
-                <AppointmentPatientPage />
+                <AppointmentsPatientPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/agendamentos/farmaceutico"
+            element={
+              <PrivateRoute allowedRoles={[UserRole.ROLE_PHARMACIST]}>
+                <AppointmentsPharmacistPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/farmaceutico/horarios/novo"
+            element={
+              <PrivateRoute allowedRoles={[UserRole.ROLE_PHARMACIST]}>
+                <AvailabilityCreatePage />
               </PrivateRoute>
             }
           />
@@ -114,7 +131,7 @@ function App() {
             path="/agendamentos/novo"
             element={
               <PrivateRoute allowedRoles={[UserRole.ROLE_PATIENT]}>
-                <AppointmentCreatePage />
+                <AppointmentSearchByParamsPage />
               </PrivateRoute>
             }
           />

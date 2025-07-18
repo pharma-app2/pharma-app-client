@@ -28,7 +28,7 @@ import { fetchFutureAppointments } from '../store/slices/appointments/appointmen
 import { Link as RouterLink } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 
-const AppointmentPage = () => {
+const AppointmentsPatientPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { appointments, status, error } = useSelector(
     (state: RootState) => state.appointments,
@@ -144,4 +144,4 @@ const AppointmentPage = () => {
   );
 };
 
-export default AppointmentPage;
+export default AppointmentsPatientPage;
