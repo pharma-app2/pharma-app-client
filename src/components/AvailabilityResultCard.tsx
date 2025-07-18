@@ -11,6 +11,7 @@ interface AvailabilityResultCardProps {
 const AvailabilityResultCard = ({
   availability,
 }: AvailabilityResultCardProps) => {
+  console.log(availability.id);
   return (
     <Card
       sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 2, p: 3 }}

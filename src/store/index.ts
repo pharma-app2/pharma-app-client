@@ -4,6 +4,8 @@ import signInPatientReducer from './slices/auth/signInPatientSlice';
 import appointmentReducer from './slices/appointments/appointmentSlice';
 import availabilitySearchReducer from './slices/availabilities/availabilitySearchSlice';
 import pharmacistProfileReducer from './slices/pharmacistProfiles/pharmacistProfileSlice';
+import pharmacistAppointmentReducer from './slices/appointments/pharmacistAppointmentSlice';
+import scheduleReducer from './slices/schedules/scheduleSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +16,8 @@ export const store = configureStore({
     appointments: appointmentReducer,
     availabilitySearch: availabilitySearchReducer,
     pharmacistProfile: pharmacistProfileReducer,
+    pharmacistAppointments: pharmacistAppointmentReducer,
+    schedule: scheduleReducer,
   },
 });
 

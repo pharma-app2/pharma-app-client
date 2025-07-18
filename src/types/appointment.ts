@@ -3,6 +3,7 @@ export const AppointmentStatus = {
   CONFIRMADO: 'CONFIRMADO',
   CONCLUIDO: 'CONCLUIDO',
   CANCELADO: 'CANCELADO',
+  NAO_COMPARECEU: 'NAO_COMPARECEU',
 } as const;
 
 export type AppointmentStatusEnum = keyof typeof AppointmentStatus;
