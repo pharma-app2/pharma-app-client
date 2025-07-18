@@ -1,3 +1,4 @@
+import type { StartLocalDateTime } from '../store/slices/schedules/scheduleSlice';
 import type { PharmacistProfile } from '../types/pharmacistProfile';
 import type { CalendarEvent } from '../types/schedule';
 import { apiClient } from './config/axiosConfig';
@@ -20,8 +21,12 @@ export const fetchScheduleApi = (startDate: string, endDate: string) => {
 };
 
 export const createAvailabilityApi = (data: {
-  startTime: string;
+  startLocalDateTime: StartLocalDateTime;
   durationMinutes: number;
 }) => {
   return apiClient.post<CalendarEvent>('/pharmacists/me/availabilities', data);
+};
+
+export const deleteAvailabilityApi = (availabilityId: string) => {
+  return apiClient.delete(`/pharmacists/me/availabilities/${availabilityId}`);
 };

@@ -7,6 +7,7 @@ interface CalendarGridProps {
   slotDuration: number;
   events: CalendarEvent[];
   onSlotClick: (slotDate: dayjs.Dayjs) => void;
+  onEventClick: (event: CalendarEvent) => void;
 }
 
 const CalendarGrid = ({
@@ -14,6 +15,7 @@ const CalendarGrid = ({
   slotDuration,
   events,
   onSlotClick,
+  onEventClick,
 }: CalendarGridProps) => {
   const days = Array.from({ length: 7 }, (_, i) => startOfWeek.add(i, 'day'));
   const gridInterval = slotDuration === 15 || slotDuration === 45 ? 15 : 30;
@@ -38,8 +40,6 @@ const CalendarGrid = ({
 
     // Em vez de 'span', definimos explicitamente a linha de início e de fim
     const gridRowValue = `${startRow} / ${endRow}`;
-
-    console.log({ startRow, endRow, gridRowValue });
 
     return {
       gridColumn: dayIndex + 2, // Coluna do dia da semana (permanece igual)
@@ -141,13 +141,33 @@ const CalendarGrid = ({
         )}
 
         {/* Eventos Existentes */}
-        {events.map((event) => (
-          <Box key={event.id} sx={getEventStyle(event)}>
-            {event.type === EventType.APPOINTMENT
-              ? event.patientName
-              : 'Disponível'}
-          </Box>
-        ))}
+        {events.map((event) => {
+          const isAvailability = event.type === EventType.AVAILABILITY;
+          return (
+            <Box
+              key={event.id}
+              sx={{
+                ...getEventStyle(event),
+                // 3. Adicione cursor de ponteiro apenas para disponibilidades
+                cursor: isAvailability ? 'pointer' : 'default',
+                '&:hover': {
+                  ...(isAvailability && { filter: 'brightness(0.9)' }),
+                },
+              }}
+              // 4. Adicione o manipulador de clique
+              onClick={(e) => {
+                if (isAvailability) {
+                  e.stopPropagation(); // Impede que o clique no slot de fundo seja acionado
+                  onEventClick(event);
+                }
+              }}
+            >
+              {event.type === EventType.APPOINTMENT
+                ? event.patientName
+                : 'Disponível'}
+            </Box>
+          );
+        })}
       </Box>
     </Paper>
   );

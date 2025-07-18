@@ -1,10 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import dayjs from 'dayjs';
-import 'dayjs/locale/pt-br'; // Para nomes de dias em português
+import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/pt-br';
 dayjs.locale('pt-br');
 
-// MUI Components
 import {
   Container,
   Typography,
@@ -15,26 +14,42 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  DialogActions,
 } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-// Redux e Lógica
 import type { AppDispatch, RootState } from '../store';
 import {
   createAvailability,
+  deleteAvailability,
   fetchSchedule,
 } from '../store/slices/schedules/scheduleSlice';
 import CalendarGrid from '../components/CalendarGrid';
+import { useNavigate } from 'react-router-dom';
+import { EventType, type CalendarEvent } from '../types/schedule';
 
 const DURATIONS = [15, 30, 45, 60];
 
 const AvailabilityCreatePage = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
   const { events, status } = useSelector((state: RootState) => state.schedule);
 
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [slotDuration, setSlotDuration] = useState(30);
+
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // NOVO: Estado para o diálogo de deleção
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+    null,
+  ); // NOVO: Estado para o evento selecionado
+  const [selectedSlot, setSelectedSlot] = useState<Dayjs | null>(null);
 
   const startOfWeek = useMemo(() => currentDate.startOf('week'), [currentDate]);
   const endOfWeek = useMemo(() => currentDate.endOf('week'), [currentDate]);
@@ -48,28 +63,59 @@ const AvailabilityCreatePage = () => {
     );
   }, [dispatch, startOfWeek, endOfWeek]);
 
-  const handleSlotClick = (slotDate: dayjs.Dayjs) => {
-    // Lógica para confirmar e criar o agendamento
-    if (
-      window.confirm(
-        `Criar disponibilidade de ${slotDuration} min em ${slotDate.format('DD/MM HH:mm')}?`,
-      )
-    ) {
-      dispatch(
-        createAvailability({
-          startTime: slotDate.toISOString(),
-          durationMinutes: slotDuration,
-        }),
-      ).then(() => {
-        // Recarrega os eventos após criar um novo
-        dispatch(
-          fetchSchedule({
-            startDate: startOfWeek.format('YYYY-MM-DD'),
-            endDate: endOfWeek.format('YYYY-MM-DD'),
-          }),
-        );
-      });
+  const handleSlotClick = (slotDate: Dayjs) => {
+    setSelectedSlot(slotDate); // Salva o slot clicado
+    setIsCreateDialogOpen(true); // Abre o diálogo
+  };
+
+  const handleCloseDialogs = () => {
+    setIsCreateDialogOpen(false);
+    setIsDeleteDialogOpen(false);
+    setSelectedSlot(null);
+    setSelectedEvent(null);
+  };
+
+  const handleEventClick = (event: CalendarEvent) => {
+    if (event.type === EventType.AVAILABILITY) {
+      setSelectedEvent(event);
+      setIsDeleteDialogOpen(true); // Abre o diálogo de DELEÇÃO
     }
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedEvent) {
+      dispatch(deleteAvailability(selectedEvent.id));
+    }
+    handleCloseDialogs();
+  };
+
+  const handleCreateAvailability = () => {
+    if (!selectedSlot) return;
+
+    dispatch(
+      createAvailability({
+        startTime: selectedSlot.toISOString(),
+        durationMinutes: slotDuration,
+      }),
+    ).then(() => {
+      // Recarrega os eventos após criar um novo
+      dispatch(
+        fetchSchedule({
+          startDate: startOfWeek.format('YYYY-MM-DD'),
+          endDate: endOfWeek.format('YYYY-MM-DD'),
+        }),
+      );
+    });
+    handleCloseDialogs();
+  };
+
+  const handleNavigateToCreateAppointment = () => {
+    if (!selectedSlot) return;
+    // Navega para a outra página, passando a data e hora como state
+    navigate('/farmaceutico/agendamentos/novo', {
+      state: { initialDate: selectedSlot.toISOString() },
+    });
+    handleCloseDialogs();
   };
 
   return (
@@ -130,8 +176,70 @@ const AvailabilityCreatePage = () => {
           slotDuration={slotDuration}
           events={events}
           onSlotClick={handleSlotClick}
+          onEventClick={handleEventClick}
         />
       )}
+
+      <Dialog
+        open={isCreateDialogOpen}
+        onClose={handleCloseDialogs}
+        aria-labelledby="action-dialog-title"
+      >
+        <DialogTitle id="action-dialog-title">
+          Qual ação deseja realizar?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Você selecionou o horário de {selectedSlot?.format('HH:mm')} do dia{' '}
+            {selectedSlot?.format('DD/MM/YYYY')}.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={handleCloseDialogs} color="secondary">
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleNavigateToCreateAppointment}
+            variant="outlined"
+          >
+            Agendar para Paciente
+          </Button>
+          <Button
+            onClick={handleCreateAvailability}
+            variant="contained"
+            autoFocus
+          >
+            Criar Disponibilidade
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={isDeleteDialogOpen} onClose={handleCloseDialogs}>
+        <DialogTitle>Confirmar Exclusão</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Tem certeza que deseja remover o horário disponível de{' '}
+            <strong>{dayjs(selectedEvent?.startTime).format('HH:mm')}</strong>{' '}
+            do dia{' '}
+            <strong>
+              {dayjs(selectedEvent?.startTime).format('DD/MM/YYYY')}
+            </strong>
+            ? Esta ação não pode ser desfeita.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={handleCloseDialogs} color="secondary">
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleConfirmDelete}
+            variant="contained"
+            color="error"
+          >
+            Sim, Excluir Horário
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
